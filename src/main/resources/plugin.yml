@@ -1,0 +1,6 @@
+name: CivilisationPlot
+version: '${project.version}'
+author: laptoff
+contributors: [laptoff]
+main: fr.laptoff.civilisationplot.CivilisationPlot
+api-version: '1.20'
