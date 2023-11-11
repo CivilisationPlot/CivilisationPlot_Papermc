@@ -7,7 +7,7 @@
 ####     ##      ####     ####     ####    ######    #####      ###    ####     ####    ##  ##   ####      ####     ####       ###
 
 name: CivilisationPlot
-version: '${project.version}'
+version: '1.0-SNAPSHOT'
 author: laptoff
 load: STARTUP
 contributors: [laptoff]
