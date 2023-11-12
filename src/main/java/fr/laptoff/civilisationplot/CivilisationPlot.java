@@ -1,9 +1,9 @@
 package fr.laptoff.civilisationplot;
 
+import fr.laptoff.civilisationplot.Managers.ConfigManager;
 import fr.laptoff.civilisationplot.Managers.DatabaseManager;
-import org.bukkit.plugin.PluginManager;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import java.util.logging.Logger;
 
 public final class CivilisationPlot extends JavaPlugin {
@@ -11,11 +11,14 @@ public final class CivilisationPlot extends JavaPlugin {
     public static final Logger LOGGER = Logger.getLogger("CivilisationPlot");
     private static CivilisationPlot instance;
     private DatabaseManager database;
+    private FileConfiguration configMessages; //Messages Manager (at /resources/config/Messages.yml)
 
     @Override
     public void onEnable() {
         instance = this;
         saveDefaultConfig();
+        ConfigManager configMessagesManager = new ConfigManager("Messages.yml");
+        configMessages = configMessagesManager.getFileConfiguration();
 
         LOGGER.info("####              ##      ###       ##                         ##       ##                       ######    ###                ##");
         LOGGER.info("##  ##                      ##                                  ##                                 ##  ##    ##                ##");
@@ -25,11 +28,11 @@ public final class CivilisationPlot extends JavaPlugin {
         LOGGER.info("##  ##   ####      ##       ##       ##          ##  ##  ##     ## ##    ##     ##  ##   ##  ##    ##        ##     ##  ##     ## ##");
         LOGGER.info("####     ##      ####     ####     ####    ######    #####      ###    ####     ####    ##  ##   ####      ####     ####       ###");
 
-        if (getConfig().getBoolean("database.enable")){
+        if (getConfig().getBoolean("Database.enable")){
             database = new DatabaseManager();
             database.connection();
 
-            LOGGER.info("");  //To Do: Add the message system with configuration
+            LOGGER.info(configMessages.getString("Messages.Database.success_connection"));
         }
     }
 
@@ -43,10 +46,10 @@ public final class CivilisationPlot extends JavaPlugin {
         LOGGER.info("##  ##   ####      ##       ##       ##          ##  ##  ##     ## ##    ##     ##  ##   ##  ##    ##        ##     ##  ##     ## ##");
         LOGGER.info("####     ##      ####     ####     ####    ######    #####      ###    ####     ####    ##  ##   ####      ####     ####       ###");
 
-        if (getConfig().getBoolean("database.enable") && database.isOnline()){
-            database.deconnection();
+        if (database.isConnected()){
+            database.disconnection();
 
-            LOGGER.info(""); //To Do: Add the message system with configuration
+            LOGGER.info(configMessages.getString("Messages.Database.success_disconnection"));
         }
     }
 

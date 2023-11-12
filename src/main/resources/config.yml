@@ -23,29 +23,30 @@
 #Please, if you can, follow our recommendations.                                                                       #
 #                                                                                                                      #
 #We recommend, for you:                                                                                                #
-# - Use a password for the user which have access to you database.                                                     #
+# - Use a password for the user which have access at your database.                                                    #
 # - Don't use the root user.                                                                                           #
 #                                                                                                                      #
-#Notes: We prefer mariadb so this is the driver will be prioritized over the others.                                   #
+#Notes: We prefer mariadb. This is the driver will be prioritized over the others.                                     #
+#To modify a setting, you need to stop your server. Otherwise, CivilistionPlot will be disconnected from the database. #
 ########################################################################################################################
 
-database:
+Database:
   enable: false
 
   #Motor is the system which is used by your database. For now, only "mysql" (for mysql) and "mariadb" (for mariadb) can be used.
-  Motor: mariadb
+  motor: mariadb
 
   #You must to setting the ip address of the server which host your database. If your database run on locale, you can set to "localht" or "127.0.0.1".
-  Host: 127.0.0.1
+  host: 127.0.0.1
 
   #You must set the port of your server. The default port for mysql or mariadb is 3306.
-  Port: 3306
+  port: 3306
 
   #The name of your database. It's an obligation.
-  Database_Name: civilisation_database
+  database_name: civilisation_database
 
   #You need to set the user which will all access to the database. Please read the recommended section !
-  User: root
+  user: root
 
   #The password of the user. Please read the recommendation section !
-  Password: 7r81X@}jD1@O
+  password: 7r81X@}jD1@O

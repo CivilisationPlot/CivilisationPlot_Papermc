@@ -5,6 +5,7 @@ import fr.laptoff.civilisationplot.CivilisationPlot;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Objects;
 
 public class DatabaseManager {
 
@@ -18,13 +19,17 @@ public class DatabaseManager {
 
     public void connection()
     {
-        if(!isOnline())
+        if(!isConnected())
         {
             try
             {
-                Class.forName("org.mariadb.jdbc.Driver");
-                co = DriverManager.getConnection("jdbc:" + plugin.getConfig().getString("database.Motor") + "://" + plugin.getConfig().getString("database.Host") + ":" + plugin.getConfig().getString("database.Port") + "/" + plugin.getConfig().getString("database.Database_Name"), plugin.getConfig().getString("database.User"), plugin.getConfig().getString("database.Password"));
-                return;
+                String motorDriver = "org.mariadb";
+
+                if (Objects.requireNonNull(plugin.getConfig().getString("Database.motor")).equalsIgnoreCase("mysql"))
+                    motorDriver = "com.mysql.cj";
+
+                Class.forName(motorDriver + ".jdbc.Driver"); //loading of the driver.
+                co = DriverManager.getConnection("jdbc:" + plugin.getConfig().getString("Database.motor") + "://" + plugin.getConfig().getString("Database.host") + ":" + plugin.getConfig().getString("Database.port") + "/" + plugin.getConfig().getString("Database.database_name"), plugin.getConfig().getString("Database.user"), plugin.getConfig().getString("Database.password"));
             }
             catch (SQLException e)
             {
@@ -35,14 +40,13 @@ public class DatabaseManager {
         }
     }
 
-    public void deconnection()
+    public void disconnection()
     {
-        if (isOnline())
+        if (isConnected())
         {
             try
             {
                 co.close();
-                return;
             }
             catch(SQLException e)
             {
@@ -53,13 +57,10 @@ public class DatabaseManager {
 
 
 
-    public boolean isOnline()
+    public boolean isConnected()
     {
-        if (!plugin.getConfig().getBoolean("database.enable"))
-            return false;
-
         try {
-            return co != null && !co.isClosed();
+            return co != null && !co.isClosed() && plugin.getConfig().getBoolean("Database.enable");
         }
         catch (SQLException e)
         {
@@ -67,5 +68,4 @@ public class DatabaseManager {
         }
         return false;
     }
-
 }
