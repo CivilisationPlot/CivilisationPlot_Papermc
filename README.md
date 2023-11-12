@@ -15,6 +15,7 @@ The <link>CivilisationPlot</link> project aims to provide players with the oppor
 
 ## Installation
 
+⚠️ Warnings: CivilisationPlot_Papermc is for Paper, spigot and bukkit !
 1. Download the <link>CivilisationPlot</link> plugin from our <link>GitHub</link> page.
 2. Place the <link>JAR</link> file in the "plugins" folder of your <link>Minecraft</link> server.
 3. Restart the server for the changes to take effect.
