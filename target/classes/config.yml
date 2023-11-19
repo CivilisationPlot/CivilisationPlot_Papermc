@@ -27,7 +27,7 @@
 # - Don't use the root user.                                                                                           #
 #                                                                                                                      #
 #Notes: We prefer mariadb. This is the driver will be prioritized over the others.                                     #
-#To modify a setting, you need to stop your server. Otherwise, CivilistionPlot will be disconnected from the database. #
+#To modify a setting, you need to stop your server. Otherwise, CivilisationPlot will be disconnected from the database. #
 ########################################################################################################################
 
 Database:

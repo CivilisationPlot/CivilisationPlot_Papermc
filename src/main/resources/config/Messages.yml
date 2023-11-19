@@ -25,6 +25,6 @@ Messages:
 
   Database:
 
-    #When CivilisationPlot is connected/deconencted of the database which is set in config.yml.
+    #When CivilisationPlot is connected/disconnected of the database which is set in config.yml.
     success_connection: "The connection to the database is a success !"
     success_disconnection: "The disconnection to the database is a success !"

@@ -17,8 +17,7 @@ public final class CivilisationPlot extends JavaPlugin {
     public void onEnable() {
         instance = this;
         saveDefaultConfig();
-        ConfigManager configMessagesManager = new ConfigManager("Messages.yml");
-        configMessages = configMessagesManager.getFileConfiguration();
+         configMessages = new ConfigManager("Messages.yml").getFileConfiguration();
 
         LOGGER.info("####              ##      ###       ##                         ##       ##                       ######    ###                ##");
         LOGGER.info("##  ##                      ##                                  ##                                 ##  ##    ##                ##");

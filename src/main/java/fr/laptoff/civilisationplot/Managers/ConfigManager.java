@@ -10,18 +10,13 @@ import java.io.IOException;
 
 public class ConfigManager {
 
-    private final CivilisationPlot plugin = CivilisationPlot.getInstance();
-    private final String dataFolder = "config/";
-    private File file;
-    private FileConfiguration configFile;
+    private final File file;
+    private final FileConfiguration configFile;
 
     public ConfigManager(String filePath){
-        this.file = new File(plugin.getDataFolder() + "/" + dataFolder + filePath);
+        this.file = new File(CivilisationPlot.getInstance().getDataFolder() + "/config/" + filePath);
 
-        if (!(file.exists())) {
-            file.getParentFile().mkdirs();
-            plugin.saveResource(dataFolder + filePath, false);
-        }
+        FileManager.createFile(file);
 
         configFile = new YamlConfiguration();
 
