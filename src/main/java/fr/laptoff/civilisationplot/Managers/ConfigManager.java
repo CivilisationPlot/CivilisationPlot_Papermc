@@ -16,7 +16,7 @@ public class ConfigManager {
     public ConfigManager(String filePath){
         this.file = new File(CivilisationPlot.getInstance().getDataFolder() + "/config/" + filePath);
 
-        FileManager.createFile(file);
+        FileManager.createResourceFile(file);
 
         configFile = new YamlConfiguration();
 

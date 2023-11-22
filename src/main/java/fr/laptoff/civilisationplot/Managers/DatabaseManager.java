@@ -4,6 +4,7 @@ import fr.laptoff.civilisationplot.CivilisationPlot;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Objects;
 
@@ -67,5 +68,15 @@ public class DatabaseManager {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public void setup(){
+        try {
+            //create the civils table
+            PreparedStatement pstmt = this.getConnection().prepareStatement("CREATE TABLE civils (id INT PRIMARY KEY, uuid VARCHAR(50), name VARCHAR(50), money INT);");
+            pstmt.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
