@@ -3,6 +3,7 @@ package fr.laptoff.civilisationplot.civils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import fr.laptoff.civilisationplot.CivilisationPlot;
+import fr.laptoff.civilisationplot.Managers.DatabaseManager;
 import fr.laptoff.civilisationplot.Managers.FileManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -23,8 +24,8 @@ public class Civil {
 
     private String PlayerName;
     private float Money;
-    private final Connection co = CivilisationPlot.getInstance().getDatabase().getConnection();
-    private static final List<Civil> civilsList = new ArrayList<Civil>();
+    private static final Connection co = CivilisationPlot.getInstance().getDatabase().getConnection();
+    private static final List<String> civilsList = new ArrayList<String>();
 
     public Civil(String playerName, float money){
         this.PlayerName = playerName;
@@ -39,8 +40,16 @@ public class Civil {
         return this.Money;
     }
 
-    public List<Civil> getCivilsList(){
+    public List<String> getCivilsList(){
         return civilsList;
+    }
+
+    public Player getPlayer(){
+        return Bukkit.getPlayer(this.PlayerName);
+    }
+
+    public UUID getUuid(){
+        return getPlayer().getUniqueId();
     }
 
     public void changeMoney(float money){
@@ -48,7 +57,7 @@ public class Civil {
         this.Money = money;
         localRegister();
         insertIntoDatabase();
-        civilsList.add(this);
+        civilsList.add(this.getUuid().toString());
         updateJsonFromCivilsList();
     }
 
@@ -57,21 +66,32 @@ public class Civil {
         this.PlayerName = playerName;
         localRegister();
         insertIntoDatabase();
-        civilsList.add(this);
+        civilsList.add(this.getUuid().toString());
         updateJsonFromCivilsList();
     }
 
+    public static Boolean isExist(UUID uuid){
+        for(String uuidCivil : civilsList){
+            if (UUID.fromString(uuidCivil) == uuid)
+                return true;
+        }
+        return false;
+    }
+
     public void localRegister(){
-        File file = new File(CivilisationPlot.getInstance().getDataFolder() + "/Data/" + Bukkit.getPlayer(this.PlayerName).getUniqueId().toString() + ".json");
-        GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.create();
+        File file = new File(CivilisationPlot.getInstance().getDataFolder() + "/Data/Civils/Civils/" + this.getUuid().toString() + ".json");
+        Gson gson = new GsonBuilder().create();
 
         FileManager.createFile(file);
         FileManager.rewrite(file, gson.toJson(this));
     }
 
     public static Civil getCivilFromLocal(UUID uuid){
-        File file = new File(CivilisationPlot.getInstance().getDataFolder() + "/Data/" + uuid.toString() + ".json");
+        File file = new File(CivilisationPlot.getInstance().getDataFolder() + "/Data/Civils/Civils/" + uuid.toString() + ".json");
+
+        if (!file.exists())
+            return null;
+
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         String content;
@@ -91,8 +111,8 @@ public class Civil {
             return;
 
         try {
-            pstmt = co.prepareStatement("INSERT INTO civils (uuid, name, money) VALUES (?, ?)");
-            pstmt.setString(1, Bukkit.getPlayer(this.PlayerName).getUniqueId().toString());
+            pstmt = co.prepareStatement("INSERT INTO civils (uuid, name, money) VALUES (?, ?, ?);");
+            pstmt.setString(1, getUuid().toString());
             pstmt.setString(2, this.PlayerName);
             pstmt.setFloat(3, this.Money);
             pstmt.execute();
@@ -144,6 +164,14 @@ public class Civil {
         return civil;
     }
 
+    public static Civil getCivil(UUID uuid){
+        Civil civil = getCivilFromDatabase(uuid);
+        if (civil == null)
+            civil = getCivilFromLocal(uuid);
+
+        return civil;
+    }
+
     public static void localToDatabase(UUID uuid){
         Civil civil = getCivilFromLocal(uuid);
         civil.insertIntoDatabase();
@@ -158,18 +186,20 @@ public class Civil {
     public void save(){
         this.localRegister();
         this.insertIntoDatabase();
+        civilsList.add(this.getUuid().toString());
+        updateJsonFromCivilsList();
     }
 
     public void del() {
 
         //Delete from database
         if (CivilisationPlot.getInstance().getDatabase().isConnected()){
-            String sql = "DELETE FROM civils WHERE uuid = UUID(?)";
+            String sql = "DELETE FROM civils WHERE uuid = UUID(?);";
 
             Connection connection = CivilisationPlot.getInstance().getDatabase().getConnection();
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-                preparedStatement.setString(1, Bukkit.getPlayer(this.PlayerName).getUniqueId().toString());
+                preparedStatement.setString(1, getUuid().toString());
 
                 preparedStatement.execute();
             } catch (SQLException e) {
@@ -178,7 +208,7 @@ public class Civil {
         }
 
         //Delete from Json
-        File file = new File(CivilisationPlot.getInstance().getDataFolder() + "/Data/" + Bukkit.getPlayer(this.PlayerName).getUniqueId().toString() + ".json");
+        File file = new File(CivilisationPlot.getInstance().getDataFolder() + "/Data/Civils/Civils/" + getUuid().toString() + ".json");
 
         if (file.exists())
             file.delete();
@@ -189,23 +219,51 @@ public class Civil {
     }
 
     public static void civilsListFromJson(){
-        File file = new File(CivilisationPlot.getInstance().getDataFolder() + "/Data/CivilsList.json");
+        File file = new File(CivilisationPlot.getInstance().getDataFolder() + "/Data/Civils/CivilsList.json");
+        FileManager.createFile(file);
+
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
-        List<Civil> list;
+        List<String> list = new ArrayList<String>();
 
         try {
-            list = gson.fromJson(Files.readString(Path.of(file.getPath())), List.class);
+            list = gson.fromJson(Files.readString(Path.of(file.getPath())), ArrayList.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        if (list == null)
+            return;
+        if (list.isEmpty())
+            return;
 
         civilsList.clear();
         civilsList.addAll(list);
     }
 
+    public static void civilsListFromDatabase(){
+        if (!DatabaseManager.isOnline())
+            return;
+
+        try {
+            PreparedStatement pstmt = co.prepareStatement("SELECT * FROM civils;");
+            ResultSet result = pstmt.executeQuery();
+            civilsList.clear();
+
+            while(result.next()){
+                Civil civil = new Civil(result.getString("name"), result.getFloat("money"));
+                civilsList.add(civil.getUuid().toString());
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static void updateJsonFromCivilsList(){
-        File file = new File(CivilisationPlot.getInstance().getDataFolder() + "/Data/CivilsList.json");
+        File file = new File(CivilisationPlot.getInstance().getDataFolder() + "/Data/Civils/CivilsList.json");
+        FileManager.createFile(file);
+
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
 
@@ -214,34 +272,28 @@ public class Civil {
 
     public void registerToCivilsList(){
 
-        File file = new File(CivilisationPlot.getInstance().getDataFolder() + "/Data/CivilsList.json");
+        File file = new File(CivilisationPlot.getInstance().getDataFolder() + "/Data/Civils/CivilsList.json");
+        updateJsonFromCivilsList();
+
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
 
-        civilsList.add(this);
+        civilsList.add(this.getUuid().toString());
         FileManager.rewrite(file, gson.toJson(civilsList));
     }
 
     public static void registerAllCivilsToJson(){
-        for (Civil civil : civilsList){
-            civil.localRegister();
-        }
-    }
-
-    public static void registerAllCivilsToDatabase(){
-        for (Civil civil : civilsList) {
-            civil.insertIntoDatabase();
+        for (String civil : civilsList){
+            getCivil(UUID.fromString(civil)).localRegister();
         }
     }
 
     public void reisterAllCivils(){
         registerAllCivilsToJson();
-        registerAllCivilsToDatabase();
     }
 
     public static void load(){
-        civilsListFromJson();
-        registerAllCivilsToDatabase();
+        civilsListFromDatabase();
         registerAllCivilsToJson();
     }
 }

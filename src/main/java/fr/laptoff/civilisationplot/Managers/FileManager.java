@@ -11,7 +11,8 @@ import java.io.IOException;
 public class FileManager {
 
     public static void createResourceFile(File file){
-        if (file.exists())
+        File file_ = new File(CivilisationPlot.getInstance().getDataFolder() + "/" + file.getPath());
+        if (file_.exists())
             return;
 
         file.getParentFile().mkdirs();
@@ -32,7 +33,7 @@ public class FileManager {
     }
 
     public static void rewrite(File file, String text){
-        //This method erase the text into the file et write the new text
+        //This method erase the text into the file and write the new text
         if (!file.exists())
             return;
 
@@ -40,6 +41,8 @@ public class FileManager {
             FileWriter writer = new FileWriter(file);
             BufferedWriter bw = new BufferedWriter(writer);
             bw.write(text);
+            bw.flush();
+            bw.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -11,17 +11,20 @@ import java.io.IOException;
 public class ConfigManager {
 
     private final File file;
+    File file_;
     private final FileConfiguration configFile;
 
     public ConfigManager(String filePath){
-        this.file = new File(CivilisationPlot.getInstance().getDataFolder() + "/config/" + filePath);
+        this.file = new File("config/" + filePath);
 
         FileManager.createResourceFile(file);
+
+        this.file_ = new File(CivilisationPlot.getInstance().getDataFolder() + "/" +  file.getPath());
 
         configFile = new YamlConfiguration();
 
         try {
-            configFile.load(file);
+            configFile.load(file_);
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
@@ -32,6 +35,6 @@ public class ConfigManager {
     }
 
     public File getFile(){
-        return this.file;
+        return this.file_;
     }
 }

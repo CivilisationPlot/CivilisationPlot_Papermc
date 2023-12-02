@@ -2,16 +2,13 @@ package fr.laptoff.civilisationplot.Managers;
 
 import fr.laptoff.civilisationplot.CivilisationPlot;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Objects;
 
 public class DatabaseManager {
 
-    private Connection co;
-    private final CivilisationPlot plugin = CivilisationPlot.getInstance();
+    private static Connection co;
+    private static final CivilisationPlot plugin = CivilisationPlot.getInstance();
 
     public Connection getConnection()
     {
@@ -58,7 +55,7 @@ public class DatabaseManager {
 
 
 
-    public boolean isConnected()
+    public static boolean isConnected()
     {
         try {
             return co != null && !co.isClosed() && plugin.getConfig().getBoolean("Database.enable");
@@ -70,11 +67,42 @@ public class DatabaseManager {
         return false;
     }
 
+    public static boolean isOnline() {
+        try {
+            return !(co == null) || !co.isClosed();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean doesTableExist(String tableName) {
+        try {
+            DatabaseMetaData metaData = co.getMetaData();
+            ResultSet resultSet = metaData.getTables(null, null, tableName, null);
+
+            return resultSet.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
+
     public void setup(){
         try {
             //create the civils table
-            PreparedStatement pstmt = this.getConnection().prepareStatement("CREATE TABLE civils (id INT PRIMARY KEY, uuid VARCHAR(50), name VARCHAR(50), money INT);");
-            pstmt.execute();
+            if (!doesTableExist("civils")){
+                PreparedStatement pstmt = this.getConnection().prepareStatement("CREATE TABLE civils (id INT AUTO_INCREMENT PRIMARY KEY, uuid VARCHAR(50), name VARCHAR(50), money INT);");
+                pstmt.execute();
+            }
+
+            //create the nations table
+            if (!doesTableExist("nations")){
+                PreparedStatement pstmt = this.getConnection().prepareStatement("CREATE TABLE nations (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(50), uuid VARCHAR(50), leader_uuid VARCHAR(50));");
+                pstmt.execute();
+            }
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

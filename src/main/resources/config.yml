@@ -6,7 +6,7 @@
 ##  ##   ####      ##       ##       ##          ##  ##  ##     ## ##    ##     ##  ##   ##  ##    ##        ##     ##  ##     ## ##
 ####     ##      ####     ####     ####    ######    #####      ###    ####     ####    ##  ##   ####      ####     ####       ###
 
-#   ____             _                 _         __  __
+#  ____             _                 _         __  __
 # |  _ \           | |               | |       / _|/ _|
 # | |_) |_   _     | |     __ _ _ __ | |_ ___ | |_| |_
 # |  _ <| | | |    | |    / _` | '_ \| __/ _ \|  _|  _|
@@ -27,7 +27,7 @@
 # - Don't use the root user.                                                                                           #
 #                                                                                                                      #
 #Notes: We prefer mariadb. This is the driver will be prioritized over the others.                                     #
-#To modify a setting, you need to stop your server. Otherwise, CivilisationPlot will be disconnected from the database. #
+#To modify a setting, you need to stop your server. Otherwise, CivilisationPlot will be disconnected from the database.#
 ########################################################################################################################
 
 Database:
@@ -50,3 +50,20 @@ Database:
 
   #The password of the user. Please read the recommendation section !
   password: 7r81X@}jD1@O
+
+########################################################################################################################
+#                                                       Economy                                                        #
+#                                                                                                                      #
+#Warning: Actually, CivilisationPlot can't use the vault system.                                                       #
+#The economic system work without other economic system.                                                               #
+########################################################################################################################
+
+Economy:
+  enable: true
+
+  #The money you earn at the first join of the server (you need to respect format).
+  start_balance: 0.00
+
+  currency_name: dollar
+
+  currency_symbol: $

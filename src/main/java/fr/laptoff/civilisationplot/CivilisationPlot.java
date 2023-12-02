@@ -2,6 +2,8 @@ package fr.laptoff.civilisationplot;
 
 import fr.laptoff.civilisationplot.Managers.ConfigManager;
 import fr.laptoff.civilisationplot.Managers.DatabaseManager;
+import fr.laptoff.civilisationplot.civils.Civil;
+import fr.laptoff.civilisationplot.civils.joinListener;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import java.util.logging.Logger;
@@ -17,7 +19,19 @@ public final class CivilisationPlot extends JavaPlugin {
     public void onEnable() {
         instance = this;
         saveDefaultConfig();
-         configMessages = new ConfigManager("Messages.yml").getFileConfiguration();
+        ConfigManager configManagerMessages = new ConfigManager("Messages.yml");
+        configMessages = configManagerMessages.getFileConfiguration();
+
+        if (getConfig().getBoolean("Database.enable")){
+            database = new DatabaseManager();
+            database.connection();
+
+            database.setup();
+
+            LOGGER.info(configMessages.getString("Messages.Database.success_connection"));
+        }
+
+        Civil.load();
 
         LOGGER.info("####              ##      ###       ##                         ##       ##                       ######    ###                ##");
         LOGGER.info("##  ##                      ##                                  ##                                 ##  ##    ##                ##");
@@ -27,12 +41,7 @@ public final class CivilisationPlot extends JavaPlugin {
         LOGGER.info("##  ##   ####      ##       ##       ##          ##  ##  ##     ## ##    ##     ##  ##   ##  ##    ##        ##     ##  ##     ## ##");
         LOGGER.info("####     ##      ####     ####     ####    ######    #####      ###    ####     ####    ##  ##   ####      ####     ####       ###");
 
-        if (getConfig().getBoolean("Database.enable")){
-            database = new DatabaseManager();
-            database.connection();
-
-            LOGGER.info(configMessages.getString("Messages.Database.success_connection"));
-        }
+        getServer().getPluginManager().registerEvents(new joinListener(), this);
     }
 
     @Override
@@ -45,7 +54,7 @@ public final class CivilisationPlot extends JavaPlugin {
         LOGGER.info("##  ##   ####      ##       ##       ##          ##  ##  ##     ## ##    ##     ##  ##   ##  ##    ##        ##     ##  ##     ## ##");
         LOGGER.info("####     ##      ####     ####     ####    ######    #####      ###    ####     ####    ##  ##   ####      ####     ####       ###");
 
-        if (database.isConnected()){
+        if (DatabaseManager.isOnline()){
             database.disconnection();
 
             LOGGER.info(configMessages.getString("Messages.Database.success_disconnection"));
