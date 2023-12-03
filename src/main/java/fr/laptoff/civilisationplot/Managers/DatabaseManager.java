@@ -93,7 +93,7 @@ public class DatabaseManager {
         try {
             //create the civils table
             if (!doesTableExist("civils")){
-                PreparedStatement pstmt = this.getConnection().prepareStatement("CREATE TABLE civils (id INT AUTO_INCREMENT PRIMARY KEY, uuid VARCHAR(50), name VARCHAR(50), money INT);");
+                PreparedStatement pstmt = this.getConnection().prepareStatement("CREATE TABLE civils (id INT AUTO_INCREMENT PRIMARY KEY, uuid VARCHAR(50), name VARCHAR(50), money INT, nation VARCHAR(50));");
                 pstmt.execute();
             }
 

@@ -33,6 +33,7 @@ public class Nation {
         this.Name = name;
         this.Uuid = uuid;
         this.Leader = leader;
+        leader.setNation(this);
         this.file = new File(CivilisationPlot.getInstance().getDataFolder() + "/Data/Nations/Nations/" + this.Uuid);
         FileManager.createFile(this.file);
     }
@@ -54,7 +55,33 @@ public class Nation {
     }
 
     public void setLeader(Civil leader){
+        setLeaderDatabase(leader);
+        leader.setNation(this);
         this.Leader = leader;
+    }
+
+    public void setNameDatabase(String name){
+        if (!DatabaseManager.isOnline())
+            return;
+
+        try {
+            PreparedStatement pstmt = co.prepareStatement("UPDATE nations SET name = '" + name + "' WHERE uuid = '" + this.Uuid.toString() + "';");
+            pstmt.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void setLeaderDatabase(Civil leader){
+        if (!DatabaseManager.isOnline())
+            return;
+
+        try {
+            PreparedStatement pstmt = co.prepareStatement("UPDATE nations SET leader_uuid = '" + leader.getUuid().toString() + "' WHERE uuid = '" + this.Uuid.toString() + "';");
+            pstmt.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     //Registers
@@ -78,7 +105,7 @@ public class Nation {
 
 
         try{
-            PreparedStatement pstmt = co.prepareStatement("INSERT INTO nations (name, uuid, civil_uuid) VALUES (?, ?, ?)");
+            PreparedStatement pstmt = co.prepareStatement("INSERT INTO nations (name, uuid, leader_uuid) VALUES (?, ?, ?);");
             pstmt.setString(1, this.Name);
             pstmt.setString(2, this.Uuid.toString());
             pstmt.setString(3, this.Leader.getUuid().toString());
@@ -116,7 +143,7 @@ public class Nation {
             return null;
 
         try {
-            PreparedStatement pstmt = co.prepareStatement("SELECT * FROM nations WHERE uuid = '" + uuid + "'");
+            PreparedStatement pstmt = co.prepareStatement("SELECT * FROM nations WHERE uuid = '" + uuid + "';");
             ResultSet result = pstmt.executeQuery();
 
             while(result.next())
@@ -165,7 +192,7 @@ public class Nation {
         nationList.clear();
 
         try {
-            PreparedStatement pstmt = co.prepareStatement("SELECT * FROM nations");
+            PreparedStatement pstmt = co.prepareStatement("SELECT * FROM nations;");
             ResultSet result = pstmt.executeQuery();
 
             while(result.next()){
@@ -190,12 +217,13 @@ public class Nation {
         }
     }
 
+    //Warning: This can broke data's managements !
     public static void updateDatabaseFromLocal(){
         if (!DatabaseManager.isOnline())
             return;
 
         try {
-            PreparedStatement pstmt = co.prepareStatement("DELETE FROM nations");
+            PreparedStatement pstmt = co.prepareStatement("DELETE FROM nations;");
             pstmt.execute();
 
             for (String uuid : nationList){
@@ -247,7 +275,7 @@ public class Nation {
             return false;
 
         try {
-            PreparedStatement pstmt = co.prepareStatement("SELECT * FROM nations WHERE uuid = '" + this.Uuid + "'");
+            PreparedStatement pstmt = co.prepareStatement("SELECT * FROM nations WHERE uuid = '" + this.Uuid + "';");
             ResultSet result = pstmt.executeQuery();
 
             while(result.next())

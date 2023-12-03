@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import fr.laptoff.civilisationplot.CivilisationPlot;
 import fr.laptoff.civilisationplot.Managers.DatabaseManager;
 import fr.laptoff.civilisationplot.Managers.FileManager;
+import fr.laptoff.civilisationplot.nation.Nation;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -24,12 +25,14 @@ public class Civil {
 
     private String PlayerName;
     private float Money;
+    private UUID Nation;
     private static final Connection co = CivilisationPlot.getInstance().getDatabase().getConnection();
     private static final List<String> civilsList = new ArrayList<String>();
 
-    public Civil(String playerName, float money){
+    public Civil(String playerName, float money, UUID nation){
         this.PlayerName = playerName;
         this.Money = money;
+        this.Nation = nation;
     }
 
     public String getPlayerName(){
@@ -52,25 +55,70 @@ public class Civil {
         return getPlayer().getUniqueId();
     }
 
-    public void changeMoney(float money){
-        del();
-        this.Money = money;
-        localRegister();
-        insertIntoDatabase();
-        civilsList.add(this.getUuid().toString());
-        updateJsonFromCivilsList();
+    public UUID getNationUuid(){
+        return this.Nation;
     }
 
-    public void changeName(String playerName){
-        del();
-        this.PlayerName = playerName;
+    public fr.laptoff.civilisationplot.nation.Nation getNation(){
+        return fr.laptoff.civilisationplot.nation.Nation.getNation(this.Nation);
+    }
+
+    public void setNation(Nation nation){
+        this.Nation = nation.getUuid();
+        setNationDatabase(this.Nation);
         localRegister();
-        insertIntoDatabase();
-        civilsList.add(this.getUuid().toString());
-        updateJsonFromCivilsList();
+    }
+
+    public void setMoney(float money){
+        this.Money = money;
+        setMoneyDatabase(money);
+        localRegister();
+    }
+
+    public void setName(String playerName){
+        this.PlayerName = playerName;
+        setPlayerNameDatabase(playerName);
+        localRegister();
+    }
+
+    public void setNationDatabase(UUID uuid){
+        if (!DatabaseManager.isOnline())
+            return;
+
+        try {
+            PreparedStatement pstmt = co.prepareStatement("UPDATE civils SET nation = '" + uuid + "' WHERE uuid = '" + this.getUuid() + "';");
+            pstmt.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void setMoneyDatabase(float money){
+        if (!DatabaseManager.isOnline())
+            return;
+
+        try {
+            PreparedStatement pstmt = co.prepareStatement("UPDATE civils SET money = '" + money + "' WHERE uuid = '" + this.getUuid() + "';");
+            pstmt.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void setPlayerNameDatabase(String name){
+        if (!DatabaseManager.isOnline())
+            return;
+
+        try {
+            PreparedStatement pstmt = co.prepareStatement("UPDATE civils SET name = '" + name + "' WHERE uuid = '" + this.getUuid() + "';");
+            pstmt.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static Boolean isExist(UUID uuid){
+        civilsListFromDatabase();
         for(String uuidCivil : civilsList){
             if (UUID.fromString(uuidCivil) == uuid)
                 return true;
@@ -111,10 +159,11 @@ public class Civil {
             return;
 
         try {
-            pstmt = co.prepareStatement("INSERT INTO civils (uuid, name, money) VALUES (?, ?, ?);");
+            pstmt = co.prepareStatement("INSERT INTO civils (uuid, name, money, nation) VALUES (?, ?, ?, ?);");
             pstmt.setString(1, getUuid().toString());
             pstmt.setString(2, this.PlayerName);
             pstmt.setFloat(3, this.Money);
+            pstmt.setString(4, this.Nation.toString());
             pstmt.execute();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -127,11 +176,11 @@ public class Civil {
 
         List<Civil> list = new ArrayList<Civil>();
 
-        PreparedStatement pstmt = CivilisationPlot.getInstance().getDatabase().getConnection().prepareStatement("SELECT * FROM civils");
+        PreparedStatement pstmt = CivilisationPlot.getInstance().getDatabase().getConnection().prepareStatement("SELECT * FROM civils;");
         ResultSet result = pstmt.executeQuery();
 
         while (result.next()){
-            Civil civil = new Civil(result.getString("name"), result.getFloat("money"));
+            Civil civil = new Civil(result.getString("name"), result.getFloat("money"), UUID.fromString(result.getString("nation")));
             list.add(civil);
         }
 
@@ -151,10 +200,7 @@ public class Civil {
             ResultSet result = pstmt.executeQuery();
 
             while (result.next()){
-                String playerName = result.getString("name");
-                float money = result.getFloat("money");
-
-                civil = new Civil(playerName, money);
+                civil = new Civil(result.getString("name"), result.getFloat("money"), UUID.fromString(result.getString("nation")));
             }
 
         } catch (SQLException e) {
@@ -251,7 +297,7 @@ public class Civil {
             civilsList.clear();
 
             while(result.next()){
-                Civil civil = new Civil(result.getString("name"), result.getFloat("money"));
+                Civil civil = new Civil(result.getString("name"), result.getFloat("money"), UUID.fromString(result.getString("nation")));
                 civilsList.add(civil.getUuid().toString());
             }
 
@@ -270,10 +316,8 @@ public class Civil {
         FileManager.rewrite(file, gson.toJson(civilsList));
     }
 
-    public void registerToCivilsList(){
-
+    public void addToCivilList(){
         File file = new File(CivilisationPlot.getInstance().getDataFolder() + "/Data/Civils/CivilsList.json");
-        updateJsonFromCivilsList();
 
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
@@ -282,18 +326,8 @@ public class Civil {
         FileManager.rewrite(file, gson.toJson(civilsList));
     }
 
-    public static void registerAllCivilsToJson(){
-        for (String civil : civilsList){
-            getCivil(UUID.fromString(civil)).localRegister();
-        }
-    }
-
-    public void reisterAllCivils(){
-        registerAllCivilsToJson();
-    }
-
     public static void load(){
         civilsListFromDatabase();
-        registerAllCivilsToJson();
+        updateJsonFromCivilsList();
     }
 }

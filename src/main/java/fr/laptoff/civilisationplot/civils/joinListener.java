@@ -17,7 +17,7 @@ public class joinListener implements org.bukkit.event.Listener {
         Player player = e.getPlayer();
 
         if (!Civil.isExist(player.getUniqueId())){
-            Civil civil = new Civil(player.getName(), Economy.getStartMoneyBalance());
+            Civil civil = new Civil(player.getName(), Economy.getStartMoneyBalance(), null);
             civil.save();
             player.sendMessage(config.getString("Messages.Join.first_join"));
         } else {
