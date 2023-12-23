@@ -9,7 +9,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 public class joinListener implements org.bukkit.event.Listener {
 
-    private static final ConfigManager configMessages = new ConfigManager("Messages.yml");
+    private static final ConfigManager configMessages = new ConfigManager("english.yml");
     private static final FileConfiguration config = configMessages.getFileConfiguration();
 
     @EventHandler

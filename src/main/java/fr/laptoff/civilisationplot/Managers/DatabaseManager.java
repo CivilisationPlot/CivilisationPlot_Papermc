@@ -91,6 +91,7 @@ public class DatabaseManager {
 
     public void setup(){
         try {
+
             //create the civils table
             if (!doesTableExist("civils")){
                 PreparedStatement pstmt = this.getConnection().prepareStatement("CREATE TABLE civils (id INT AUTO_INCREMENT PRIMARY KEY, uuid VARCHAR(50), name VARCHAR(50), money INT, nation VARCHAR(50));");
@@ -100,6 +101,12 @@ public class DatabaseManager {
             //create the nations table
             if (!doesTableExist("nations")){
                 PreparedStatement pstmt = this.getConnection().prepareStatement("CREATE TABLE nations (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(50), uuid VARCHAR(50), leader_uuid VARCHAR(50));");
+                pstmt.execute();
+            }
+
+            //create the plots table
+            if (!doesTableExist("plots")){
+                PreparedStatement pstmt = this.getConnection().prepareStatement("CREATE TABLE plots (id INT AUTO_INCREMENT PRIMARY KEY, uuid VARCHAR(50), wordlName VARCHAR(50), xCoordinates DOUBLE, yCoordinates DOUBLE, level TINYINT, propertyType VARCHAR(50), uuidProprietary VARCHAR(50));");
                 pstmt.execute();
             }
 

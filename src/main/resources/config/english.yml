@@ -15,12 +15,14 @@
 #         __/ |                | |
 #        |___/                 |_|
 
+#Translator: Laptoff
+
 Messages:
 
 ########################################################################################################################
 #                                                   Database Messages                                                  #
 #                                                                                                                      #
-#Here ou can set all messages which hav linked to the database module.                                                 #
+#Here ou can set all messages which have linked to the database module.                                                #
 ########################################################################################################################
 
   Database:

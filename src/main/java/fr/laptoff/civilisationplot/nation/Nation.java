@@ -35,7 +35,9 @@ public class Nation {
         this.Leader = leader;
         leader.setNation(this);
         this.file = new File(CivilisationPlot.getInstance().getDataFolder() + "/Data/Nations/Nations/" + this.Uuid);
-        FileManager.createFile(this.file);
+
+        if (!isExistIntoLocal() || !isExistIntoDatabase())
+            save();
     }
 
     public String getName(){
@@ -92,6 +94,8 @@ public class Nation {
 
     public void registerToLocal(){
         Gson gson = new GsonBuilder().create();
+
+        FileManager.createFile(this.file);
 
         FileManager.rewrite(this.file, gson.toJson(this));
     }
@@ -217,7 +221,7 @@ public class Nation {
         }
     }
 
-    //Warning: This can broke data's managements !
+    //Warning: This can break data's managements !
     public static void updateDatabaseFromLocal(){
         if (!DatabaseManager.isOnline())
             return;
@@ -270,6 +274,10 @@ public class Nation {
         this.delFromNationList();
     }
 
+    public boolean isExistIntoLocal(){
+        return new File(CivilisationPlot.getInstance().getDataFolder() + "/Data/Nations/Nations/" + this.Uuid).exists();
+    }
+
     public boolean isExistIntoDatabase(){
         if (co == null)
             return false;
@@ -278,12 +286,23 @@ public class Nation {
             PreparedStatement pstmt = co.prepareStatement("SELECT * FROM nations WHERE uuid = '" + this.Uuid + "';");
             ResultSet result = pstmt.executeQuery();
 
-            while(result.next())
-                return true;
+            return result.next();
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return false;
+    }
+
+    public void save(){
+        registerToDatabase();
+        registerToLocal();
+        registerToList();
+        updateLocalListFromProgramList();
+    }
+
+    public static void load(){
+        updateProgramListFromDatabase();
+        updateLocalListFromProgramList();
+        updateLocalFromDatabase();
     }
 }

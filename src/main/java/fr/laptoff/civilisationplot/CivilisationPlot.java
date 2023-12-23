@@ -4,6 +4,7 @@ import fr.laptoff.civilisationplot.Managers.ConfigManager;
 import fr.laptoff.civilisationplot.Managers.DatabaseManager;
 import fr.laptoff.civilisationplot.civils.Civil;
 import fr.laptoff.civilisationplot.civils.joinListener;
+import fr.laptoff.civilisationplot.nation.Nation;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import java.util.logging.Logger;
@@ -13,13 +14,13 @@ public final class CivilisationPlot extends JavaPlugin {
     public static final Logger LOGGER = Logger.getLogger("CivilisationPlot");
     private static CivilisationPlot instance;
     private DatabaseManager database;
-    private FileConfiguration configMessages; //Messages Manager (at /resources/config/Messages.yml)
+    private FileConfiguration configMessages; //Messages Manager (at /resources/config/english.yml)
 
     @Override
     public void onEnable() {
         instance = this;
         saveDefaultConfig();
-        ConfigManager configManagerMessages = new ConfigManager("Messages.yml");
+        ConfigManager configManagerMessages = new ConfigManager(getConfig().getString("Language.language"));
         configMessages = configManagerMessages.getFileConfiguration();
 
         if (getConfig().getBoolean("Database.enable")){
@@ -32,6 +33,7 @@ public final class CivilisationPlot extends JavaPlugin {
         }
 
         Civil.load();
+        Nation.load();
 
         LOGGER.info("####              ##      ###       ##                         ##       ##                       ######    ###                ##");
         LOGGER.info("##  ##                      ##                                  ##                                 ##  ##    ##                ##");

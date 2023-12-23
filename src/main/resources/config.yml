@@ -67,3 +67,20 @@ Economy:
   currency_name: dollar
 
   currency_symbol: $
+
+
+########################################################################################################################
+#                                                       Language                                                       #
+#                                                                                                                      #
+#You can set the main language for the plugin This will impact gameplay.                                               #
+########################################################################################################################
+
+Language:
+
+  #Only these languages are available. Warning: Languages names are case-sensitive...
+  #If you want to custom translations, you can edit the fil "LanguageName.yml" dans le dossier config.
+  #Only listed can be use:
+  #english
+  #français
+
+  language: english
