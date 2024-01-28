@@ -1,11 +1,11 @@
-package fr.laptoff.civilisationplot.nation;
+package fr.laptoff.civilisationplot.managers.nation;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import fr.laptoff.civilisationplot.CivilisationPlot;
-import fr.laptoff.civilisationplot.Managers.DatabaseManager;
-import fr.laptoff.civilisationplot.Managers.FileManager;
-import fr.laptoff.civilisationplot.civils.Civil;
+import fr.laptoff.civilisationplot.managers.datas.DatabaseManager;
+import fr.laptoff.civilisationplot.managers.datas.FileManager;
+import fr.laptoff.civilisationplot.managers.civils.Civil;
 
 import java.io.File;
 import java.io.IOException;

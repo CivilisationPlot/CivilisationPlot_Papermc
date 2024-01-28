@@ -1,7 +1,7 @@
-package fr.laptoff.civilisationplot.civils;
+package fr.laptoff.civilisationplot.managers.civils;
 
-import fr.laptoff.civilisationplot.Managers.ConfigManager;
-import fr.laptoff.civilisationplot.economy.Economy;
+import fr.laptoff.civilisationplot.managers.datas.ConfigManager;
+import fr.laptoff.civilisationplot.managers.economy.Economy;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

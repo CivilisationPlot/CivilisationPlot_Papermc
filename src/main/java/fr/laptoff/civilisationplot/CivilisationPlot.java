@@ -1,10 +1,10 @@
 package fr.laptoff.civilisationplot;
 
-import fr.laptoff.civilisationplot.Managers.ConfigManager;
-import fr.laptoff.civilisationplot.Managers.DatabaseManager;
-import fr.laptoff.civilisationplot.civils.Civil;
-import fr.laptoff.civilisationplot.civils.joinListener;
-import fr.laptoff.civilisationplot.nation.Nation;
+import fr.laptoff.civilisationplot.managers.datas.ConfigManager;
+import fr.laptoff.civilisationplot.managers.datas.DatabaseManager;
+import fr.laptoff.civilisationplot.managers.civils.Civil;
+import fr.laptoff.civilisationplot.managers.civils.joinListener;
+import fr.laptoff.civilisationplot.managers.nation.Nation;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import java.util.logging.Logger;

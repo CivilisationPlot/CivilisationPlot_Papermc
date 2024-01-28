@@ -1,4 +1,4 @@
-package fr.laptoff.civilisationplot.economy;
+package fr.laptoff.civilisationplot.managers.economy;
 
 import fr.laptoff.civilisationplot.CivilisationPlot;
 

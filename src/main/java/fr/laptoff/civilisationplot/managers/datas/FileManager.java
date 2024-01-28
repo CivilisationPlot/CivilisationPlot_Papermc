@@ -1,4 +1,4 @@
-package fr.laptoff.civilisationplot.Managers;
+package fr.laptoff.civilisationplot.managers.datas;
 
 
 import fr.laptoff.civilisationplot.CivilisationPlot;
@@ -33,7 +33,7 @@ public class FileManager {
     }
 
     public static void rewrite(File file, String text){
-        //This method erase the text into the file and write the new text
+    //This method erase the text into the file and write the new text
         if (!file.exists())
             return;
 

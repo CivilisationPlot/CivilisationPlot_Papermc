@@ -1,0 +1,86 @@
+####              ##      ###       ##                         ##       ##                       ######    ###                ##
+##  ##                      ##                                  ##                                 ##  ##    ##                ##
+##       ##  ##    ###       ##      ###      #####    ####     #####    ###      ####    #####     ##  ##    ##      ####     #####
+##       ##  ##     ##       ##       ##     ##           ##     ##       ##     ##  ##   ##  ##    #####     ##     ##  ##     ##
+##       ##  ##     ##       ##       ##      #####    #####     ##       ##     ##  ##   ##  ##    ##        ##     ##  ##     ##
+##  ##   ####      ##       ##       ##          ##  ##  ##     ## ##    ##     ##  ##   ##  ##    ##        ##     ##  ##     ## ##
+####     ##      ####     ####     ####    ######    #####      ###    ####     ####    ##  ##   ####      ####     ####       ###
+
+#  ____             _                 _         __  __
+# |  _ \           | |               | |       / _|/ _|
+# | |_) |_   _     | |     __ _ _ __ | |_ ___ | |_| |_
+# |  _ <| | | |    | |    / _` | '_ \| __/ _ \|  _|  _|
+# | |_) | |_| |    | |___| (_| | |_) | || (_) | | | |
+# |____/ \__, |    |______\__,_| .__/ \__\___/|_| |_|
+#         __/ |                | |
+#        |___/                 |_|
+
+########################################################################################################################
+#                                                       Database                                                       #
+#                                                                                                                      #
+#This section is to set database parameters.                                                                           #
+#You can disable/enable the database system by setting "enable" to "true" or "false".                                  #
+#Please, if you can, follow our recommendations.                                                                       #
+#                                                                                                                      #
+#We recommend, for you:                                                                                                #
+# - Use a password for the user which have access at your database.                                                    #
+# - Don't use the root user.                                                                                           #
+#                                                                                                                      #
+#Notes: We prefer mariadb. This is the driver will be prioritized over the others.                                     #
+#To modify a setting, you need to stop your server. Otherwise, CivilisationPlot will be disconnected from the database.#
+########################################################################################################################
+
+Database:
+  enable: false
+
+  #Motor is the system which is used by your database. For now, only "mysql" (for mysql) and "mariadb" (for mariadb) can be used.
+  motor: mariadb
+
+  #You must to setting the ip address of the server which host your database. If your database run on locale, you can set to "localht" or "127.0.0.1".
+  host: 127.0.0.1
+
+  #You must set the port of your server. The default port for mysql or mariadb is 3306.
+  port: 3306
+
+  #The name of your database. It's an obligation.
+  database_name: civilisation_database
+
+  #You need to set the user which will all access to the database. Please read the recommended section !
+  user: root
+
+  #The password of the user. Please read the recommendation section !
+  password: 7r81X@}jD1@O
+
+########################################################################################################################
+#                                                       Economy                                                        #
+#                                                                                                                      #
+#Warning: Actually, CivilisationPlot can't use the vault system.                                                       #
+#The economic system work without other economic system.                                                               #
+########################################################################################################################
+
+Economy:
+  enable: true
+
+  #The money you earn at the first join of the server (you need to respect format).
+  start_balance: 0.00
+
+  currency_name: dollar
+
+  currency_symbol: $
+
+
+########################################################################################################################
+#                                                       Language                                                       #
+#                                                                                                                      #
+#You can set the main language for the plugin This will impact gameplay.                                               #
+########################################################################################################################
+
+Language:
+
+  #Only these languages are available. Warning: Languages names are case-sensitive...
+  #If you want to custom translations, you can edit the fil "LanguageName.yml" dans le dossier config.
+  #Only listed can be use:
+  #english
+  #français
+
+  language: english

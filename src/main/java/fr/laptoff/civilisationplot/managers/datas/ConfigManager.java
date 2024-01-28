@@ -1,4 +1,4 @@
-package fr.laptoff.civilisationplot.Managers;
+package fr.laptoff.civilisationplot.managers.datas;
 
 import fr.laptoff.civilisationplot.CivilisationPlot;
 import org.bukkit.configuration.InvalidConfigurationException;

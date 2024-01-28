@@ -166,6 +166,7 @@ public class Plot {
 
         try {
             PreparedStatement pstmt = co.prepareStatement("DELETE FROM plots WHERE uuid = '" + this.Uuid + "';");
+            pstmt.executeQuery();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

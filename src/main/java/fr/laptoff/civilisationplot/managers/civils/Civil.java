@@ -1,11 +1,11 @@
-package fr.laptoff.civilisationplot.civils;
+package fr.laptoff.civilisationplot.managers.civils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import fr.laptoff.civilisationplot.CivilisationPlot;
-import fr.laptoff.civilisationplot.Managers.DatabaseManager;
-import fr.laptoff.civilisationplot.Managers.FileManager;
-import fr.laptoff.civilisationplot.nation.Nation;
+import fr.laptoff.civilisationplot.managers.datas.DatabaseManager;
+import fr.laptoff.civilisationplot.managers.datas.FileManager;
+import fr.laptoff.civilisationplot.managers.nation.Nation;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -59,8 +59,8 @@ public class Civil {
         return this.Nation;
     }
 
-    public fr.laptoff.civilisationplot.nation.Nation getNation(){
-        return fr.laptoff.civilisationplot.nation.Nation.getNation(this.Nation);
+    public fr.laptoff.civilisationplot.managers.nation.Nation getNation(){
+        return fr.laptoff.civilisationplot.managers.nation.Nation.getNation(this.Nation);
     }
 
     public void setNation(Nation nation){
