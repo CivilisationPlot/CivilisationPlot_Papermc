@@ -1,10 +1,10 @@
-package fr.laptoff.civilisationplot.plots;
+package fr.laptoff.civilisationplot.managers.plots;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import fr.laptoff.civilisationplot.CivilisationPlot;
-import fr.laptoff.civilisationplot.Managers.DatabaseManager;
-import fr.laptoff.civilisationplot.Managers.FileManager;
+import fr.laptoff.civilisationplot.managers.datas.DatabaseManager;
+import fr.laptoff.civilisationplot.managers.datas.FileManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -94,12 +94,30 @@ public class Plot {
     }
 
     //Database
+    public Plot getPlotFromDatabase(UUID uuid){
+        if (!DatabaseManager.isOnline())
+            return null;
+
+        try {
+            PreparedStatement pstmt = co.prepareStatement("SELECT * FROM plots WHERE uuid = '" + uuid + "';");
+            ResultSet result = pstmt.executeQuery();
+
+            while (result.next()){
+                return new Plot(result.getString("worldName"), result.getDouble("xCoordinates"), result.getDouble("yCoordinates"), result.getString("propertyType"), UUID.fromString(result.getString("proprietary")), result.getByte("level"), UUID.fromString(result.getString("uuidProprietary")));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public void updateObjectFromDatabase(){
         if (!DatabaseManager.isOnline())
             return;
 
         try {
-            PreparedStatement pstmt = co.prepareStatement("SELECT * FROM plots WHERE uuid = '" + this.Uuid.toString() + "'");
+            PreparedStatement pstmt = co.prepareStatement("SELECT * FROM plots WHERE uuid = '" + this.Uuid.toString() + "';");
             ResultSet result = pstmt.executeQuery();
 
             if (!result.next())
@@ -109,6 +127,7 @@ public class Plot {
                 this.WorldName = result.getString("worldName");
                 this.YCoordinates = result.getDouble("yCoordinates");
                 this.XCoordinate = result.getDouble("xCoordinates");
+                this.Proprietary = UUID.fromString(result.getString("proprietary"));
                 this.Level = result.getByte("level");
                 this.PropertyType = result.getString("propertyType");
                 this.Proprietary = UUID.fromString(result.getString("uuidProprietary"));
@@ -131,7 +150,17 @@ public class Plot {
         }
     }
 
-    public void deleteFromDatabase(){
+    public static void updateDatabaseFromLocalList(){
+        for(UUID uuid: plotsList){
+            getPlotLocal(uuid).updateDatabaseFromObject();
+        }
+    }
+
+    public void updateDatabaseFromLocal(UUID uuid){
+        getPlotLocal(uuid).updateDatabaseFromObject();
+    }
+
+    public void delFromDatabase(){
         if (!DatabaseManager.isOnline())
             return;
 
@@ -142,7 +171,7 @@ public class Plot {
         }
     }
 
-    //Local (/CivilisationPlot/Data/Plots/)
+    //Local and LocalList (/CivilisationPlot/Data/Plots/)
     public static Plot getPlotLocal(double x, double z){
         for (UUID plotUuid : plotsList){
             Plot plot = getPlotLocal(plotUuid);
@@ -193,11 +222,10 @@ public class Plot {
         FileManager.rewrite(this.file, gson.toJson(this));
     }
 
-    public static void saveListLocal(){
+    public static void saveLocalList(){
         Gson gson = new GsonBuilder().create();
 
         FileManager.createFile(fileList);
-
         FileManager.rewrite(fileList, gson.toJson(plotsList));
     }
 
@@ -207,6 +235,36 @@ public class Plot {
 
     public void delFromLocalList(){
         plotsList.remove(this.Uuid);
-        saveListLocal();
+        saveLocalList();
+    }
+
+    //Local and Database
+    public Plot getPlot(UUID uuid){
+
+        Plot plot = getPlotFromDatabase(uuid);
+
+        if (plot == null)
+            plot = getPlotLocal(uuid);
+
+        return plot;
+    }
+
+    public void update(){
+        localSave();
+        updateDatabaseFromObject();
+    }
+
+    public void delete(){
+        delFromDatabase();
+        delLocal();
+        delFromLocalList();
+        updateListFromLocal();
+    }
+
+    public void save(){
+        updateDatabaseFromObject();
+        localSave();
+        plotsList.add(this.Uuid);
+        saveLocalList();
     }
 }
