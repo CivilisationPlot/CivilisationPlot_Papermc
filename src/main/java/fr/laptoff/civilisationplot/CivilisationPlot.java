@@ -4,6 +4,7 @@ import fr.laptoff.civilisationplot.managers.database.Database;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import java.util.logging.Logger;
 
@@ -25,15 +26,6 @@ public final class CivilisationPlot extends JavaPlugin {
             LOGGER.info(configMessages.getString("Messages.Database.success_connection"));
         }
 
-
-        LOGGER.info("####              ##      ###       ##                         ##       ##                       ######    ###                ##");
-        LOGGER.info("##  ##                      ##                                  ##                                 ##  ##    ##                ##");
-        LOGGER.info("##       ##  ##    ###       ##      ###      #####    ####     #####    ###      ####    #####     ##  ##    ##      ####     #####");
-        LOGGER.info("##       ##  ##     ##       ##       ##     ##           ##     ##       ##     ##  ##   ##  ##    #####     ##     ##  ##     ##");
-        LOGGER.info("##       ##  ##     ##       ##       ##      #####    #####     ##       ##     ##  ##   ##  ##    ##        ##     ##  ##     ##");
-        LOGGER.info("##  ##   ####      ##       ##       ##          ##  ##  ##     ## ##    ##     ##  ##   ##  ##    ##        ##     ##  ##     ## ##");
-        LOGGER.info("####     ##      ####     ####     ####    ######    #####      ###    ####     ####    ##  ##   ####      ####     ####       ###");
-
         if (getConfig().getBoolean("database.enable")){
             database.connection();
             database.setup();
@@ -44,13 +36,7 @@ public final class CivilisationPlot extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        LOGGER.info("####              ##      ###       ##                         ##       ##                       ######    ###                ##");
-        LOGGER.info("##  ##                      ##                                  ##                                 ##  ##    ##                ##");
-        LOGGER.info("##       ##  ##    ###       ##      ###      #####    ####     #####    ###      ####    #####     ##  ##    ##      ####     #####");
-        LOGGER.info("##       ##  ##     ##       ##       ##     ##           ##     ##       ##     ##  ##   ##  ##    #####     ##     ##  ##     ##");
-        LOGGER.info("##       ##  ##     ##       ##       ##      #####    #####     ##       ##     ##  ##   ##  ##    ##        ##     ##  ##     ##");
-        LOGGER.info("##  ##   ####      ##       ##       ##          ##  ##  ##     ## ##    ##     ##  ##   ##  ##    ##        ##     ##  ##     ## ##");
-        LOGGER.info("####     ##      ####     ####     ####    ######    #####      ###    ####     ####    ##  ##   ####      ####     ####       ###");
+
 
         if (Database.isOnline()){
             database.disconnection();
@@ -64,6 +50,17 @@ public final class CivilisationPlot extends JavaPlugin {
 
     public static CivilisationPlot getInstance(){
         return instance;
+    }
+
+    public static String getLanguage(){
+
+        if (getInstance().getConfig().getString("Language.language") == null)
+            return "english";
+
+        if (!getInstance().getConfig().getString("Language.language").equalsIgnoreCase("english") || !getInstance().getConfig().getString("Language.language").equalsIgnoreCase("français"))
+            return "english";
+
+        return getInstance().getConfig().getString("Language.language");
     }
 
 }

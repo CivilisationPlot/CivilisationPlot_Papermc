@@ -49,24 +49,7 @@ Database:
   user: root
 
   #The password of the user. Please read the recommendation section !
-  password: 7r81X@}jD1@O
-
-########################################################################################################################
-#                                                       Economy                                                        #
-#                                                                                                                      #
-#Warning: Actually, CivilisationPlot can't use the vault system.                                                       #
-#The economic system work without other economic system.                                                               #
-########################################################################################################################
-
-Economy:
-  enable: true
-
-  #The money you earn at the first join of the server (you need to respect format).
-  start_balance: 0.00
-
-  currency_name: dollar
-
-  currency_symbol: $
+  password: INeedCoffee974
 
 
 ########################################################################################################################
@@ -78,9 +61,9 @@ Economy:
 Language:
 
   #Only these languages are available. Warning: Languages names are case-sensitive...
-  #If you want to custom translations, you can edit the fil "LanguageName.yml" dans le dossier config.
-  #Only listed can be use:
-  #english
-  #français
+  #If you want to custom translations, you can edit the file "LanguageName.yml" in the config file.
+  #Only listed can be used:
+  # - english
+  # - français
 
   language: english

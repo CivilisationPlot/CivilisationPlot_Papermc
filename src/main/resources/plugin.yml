@@ -10,6 +10,4 @@ name: CivilisationPlot
 version: '${project.version}'
 author: laptoff
 load: STARTUP
-contributors: [laptoff]
 main: fr.laptoff.civilisationplot.CivilisationPlot
-api-version: '1.20'
