@@ -12,7 +12,8 @@ public enum Messages {
     DATABASE_CONNECTED("database.connected", "<green>Fabulous ! The plugin is connected to the database.", new File(CivilisationPlot.getInstance().getDataFolder() + "/config/" + CivilisationPlot.getLanguage() + ".yml")),
     DATABASE_DISCONNECTED("database.disconnected", "<green> The database is successfully disconnected to the plugin !", new File(CivilisationPlot.getInstance().getDataFolder() + "/config/" + CivilisationPlot.getLanguage() + ".yml")),
     PLUGIN_STARTED("global.plugin_start", "<green> CivilisationPlot started successfully !", new File(CivilisationPlot.getInstance().getDataFolder() + "/config/" + CivilisationPlot.getLanguage() + ".yml")),
-    PLUGIN_SHUTDOWNED("global.plugin_shutdown", "<green> CivilisationPlot stopped successfully !", new File(CivilisationPlot.getInstance().getDataFolder() + "/config/" + CivilisationPlot.getLanguage() + ".yml"));
+    PLUGIN_SHUTDOWNED("global.plugin_shutdown", "<green> CivilisationPlot stopped successfully !", new File(CivilisationPlot.getInstance().getDataFolder() + "/config/" + CivilisationPlot.getLanguage() + ".yml")),
+    AN_ERROR_OCCURED("global.an_error_occurred", "<red> An error occurred, please contact an administrator.", new File(CivilisationPlot.getInstance().getDataFolder() + "/config/" + CivilisationPlot.getLanguage() + ".yml"));
 
     private final String Path;
     private final String DefaultValue;

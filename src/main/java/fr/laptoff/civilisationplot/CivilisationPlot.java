@@ -47,6 +47,9 @@ public final class CivilisationPlot extends JavaPlugin {
     public static CivilisationPlot getInstance(){
         return instance;
     }
+    public ConsoleCommandSender getConsole(){
+        return console;
+    }
 
     public static String getLanguage(){
 

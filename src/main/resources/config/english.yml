@@ -34,3 +34,6 @@ global:
   #When the plugin started and when it stopped.
   plugin_started: <green> CivilisationPlot started successfully !
   plugin_shutdown: <green> CivilisationPlot stopped successfully !
+
+  #When an error occurred.
+  an_error_occurred: <red> An error occurred, please contact an administrator.
