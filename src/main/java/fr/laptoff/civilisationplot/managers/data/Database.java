@@ -1,4 +1,4 @@
-package fr.laptoff.civilisationplot.managers.database;
+package fr.laptoff.civilisationplot.managers.data;
 
 import fr.laptoff.civilisationplot.CivilisationPlot;
 
