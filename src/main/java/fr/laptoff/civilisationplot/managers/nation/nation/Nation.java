@@ -1,4 +1,4 @@
-package fr.laptoff.civilisationplot.managers.nation;
+package fr.laptoff.civilisationplot.managers.nation.nation;
 
 import fr.laptoff.civilisationplot.CivilisationPlot;
 import fr.laptoff.civilisationplot.managers.data.Database;

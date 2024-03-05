@@ -1,4 +1,4 @@
-package fr.laptoff.civilisationplot.managers.nation;
+package fr.laptoff.civilisationplot.managers.nation.nation;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
