@@ -20,15 +20,17 @@ public class Civil {
     private final UUID Uuid;
     private float Money;
     private final List<UUID> Friends;
+    private UUID NationUuid;
     private final jsonManager json = new jsonManager();
     private final File file;
     private final static CivilisationPlot plugin = CivilisationPlot.getInstance();
     private final static Database database = plugin.getDatabase();
 
-    public Civil(UUID uuid, float money, List<UUID> friends){
+    public Civil(UUID uuid, float money, List<UUID> friends, UUID nationUuid){
         this.Uuid = uuid;
         this.Money = money;
         this.Friends = friends;
+        this.NationUuid = nationUuid;
 
         file = new File(plugin.getDataFolder() + "/Data/Civil/" + this.Uuid + ".json");
     }
@@ -55,6 +57,14 @@ public class Civil {
 
     public void removeFriend(UUID uuid){
         Friends.remove(uuid);
+    }
+
+    public UUID getNationUuid(){
+        return this.NationUuid;
+    }
+
+    public void setNation(UUID uuid){
+        this.NationUuid = uuid;
     }
 
     public String getCivilJson(){

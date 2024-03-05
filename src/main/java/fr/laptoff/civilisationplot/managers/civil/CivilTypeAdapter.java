@@ -26,6 +26,8 @@ public class CivilTypeAdapter extends TypeAdapter<Civil> {
             }
         writer.endArray();
 
+        writer.name("nation").value(civil.getNationUuid().toString());
+
         writer.endObject();
     }
 
@@ -37,6 +39,7 @@ public class CivilTypeAdapter extends TypeAdapter<Civil> {
         UUID uuid = null;
         float money = 0f;
         List<UUID> friends = new ArrayList<UUID>();
+        UUID nationUuid = null;
 
         while(reader.hasNext()){
             switch (reader.nextName()){
@@ -61,10 +64,13 @@ public class CivilTypeAdapter extends TypeAdapter<Civil> {
                         reader.endObject();
                     }
                     reader.endArray();
+                case "nation" :
+                    nationUuid = UUID.fromString(reader.nextString());
+                    break;
             }
         }
         reader.endObject();
 
-        return new Civil(uuid, money, friends);
+        return new Civil(uuid, money, friends, nationUuid);
     }
 }
