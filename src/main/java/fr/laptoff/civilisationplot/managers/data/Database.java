@@ -89,6 +89,11 @@ public class Database {
                 PreparedStatement pstmt = this.getConnection().prepareStatement("CREATE TABLE nations (id INT AUTO_INCREMENT PRIMARY KEY, uuid VARCHAR(50), json VARCHAR(50));");
                 pstmt.execute();
             }
+
+            if (!doesTableExist("plots")){
+                PreparedStatement pstmt = this.getConnection().prepareStatement("CREATE TABLE plots (id INT AUTO_INCREMENT PRIMARY KEY, chunkid VARCHAR(50), json VARCHAR(50));");
+                pstmt.execute();
+            }
         }catch (SQLException e){
             e.printStackTrace();
         }
