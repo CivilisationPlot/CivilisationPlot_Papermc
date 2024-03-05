@@ -22,15 +22,15 @@ public class Civil {
     private final List<UUID> Friends;
     private final jsonManager json = new jsonManager();
     private final File file;
-    private final CivilisationPlot plugin = CivilisationPlot.getInstance();
-    private final Database database = plugin.getDatabase();
+    private final static CivilisationPlot plugin = CivilisationPlot.getInstance();
+    private final static Database database = plugin.getDatabase();
 
     public Civil(UUID uuid, float money, List<UUID> friends){
         this.Uuid = uuid;
         this.Money = money;
         this.Friends = friends;
 
-        file = new File(plugin.getDataFolder() + "/Data/Civil/" + this.Uuid + ".yml");
+        file = new File(plugin.getDataFolder() + "/Data/Civil/" + this.Uuid + ".json");
     }
 
     public UUID getUuid(){
@@ -78,7 +78,7 @@ public class Civil {
             return null;
 
         try{
-            return Files.readString(Path.of(new File(CivilisationPlot.getInstance().getDataFolder() + "/Data/Civil/" + uuid + ".yml").getPath()));
+            return Files.readString(Path.of(new File(CivilisationPlot.getInstance().getDataFolder() + "/Data/Civil/" + uuid + ".json").getPath()));
         }catch(IOException e){
             e.printStackTrace();
         }
@@ -95,7 +95,7 @@ public class Civil {
     }
 
     public static boolean isLocalExist(UUID uuid){
-        return new File(CivilisationPlot.getInstance().getDataFolder() + "/Data/Civil/" + uuid + ".yml").exists();
+        return new File(CivilisationPlot.getInstance().getDataFolder() + "/Data/Civil/" + uuid + ".json").exists();
     }
 
     public void databaseSave(){
@@ -155,42 +155,34 @@ public class Civil {
         return null;
     }
 
-    public Civil getCivilFromJson(){
-        String jsonFromLocal = getJsonFromLocal();
-        String jsonFromDatabase = getJsonFromDatabase();
-
-        if (!isLocalExist())
+    public static Civil getCivilFromDatabase(UUID uuid){
+        if (!database.isConnected())
             return null;
 
-        if (!jsonFromLocal.equals(jsonFromDatabase) && database.isConnected()){
-            plugin.getConsole().sendMessage(Messages.AN_ERROR_OCCURED.getComponent());
+        if (getJsonFromDatabase(uuid) == null)
             return null;
-        }
 
-        return json.deserialize(jsonFromLocal);
+        return new jsonManager().deserialize(getJsonFromDatabase(uuid));
     }
 
-    public static Civil getCivilFromJson(UUID uuid){
-        String jsonFromLocal = getJsonFromLocal(uuid);
-        String jsonFromDatabase = getJsonFromDatabase(uuid);
+    public static void syncLocalWithDatabase(UUID uuid){
+        if (!database.isConnected())
+            return;
 
-        if (!isLocalExist(uuid))
-            return null;
-
-        if (!jsonFromLocal.equals(jsonFromDatabase) && CivilisationPlot.getInstance().getDatabase().isConnected()){
-            CivilisationPlot.getInstance().getConsole().sendMessage(Messages.AN_ERROR_OCCURED.getComponent());
-            return null;
+        if (getCivilFromDatabase(uuid) == null){
+            deleteFromLocal(uuid);
+            return;
         }
 
-        return new jsonManager().deserialize(jsonFromLocal);
+        getCivilFromDatabase(uuid).localSave();
     }
 
     public void deleteFromLocal(){
         file.delete();
     }
 
-    public void deleteFromLocal(UUID uuid){
-        new File(CivilisationPlot.getInstance().getDataFolder() + "/Data/Civil/" + uuid + ".yml").delete();
+    public static void deleteFromLocal(UUID uuid){
+        new File(CivilisationPlot.getInstance().getDataFolder() + "/Data/Civil/" + uuid + ".json").delete();
     }
 
     public void deleteFromDatabase(){
