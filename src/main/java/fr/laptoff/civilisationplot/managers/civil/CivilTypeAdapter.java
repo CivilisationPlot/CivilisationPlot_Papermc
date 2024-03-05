@@ -54,11 +54,8 @@ public class CivilTypeAdapter extends TypeAdapter<Civil> {
                         reader.beginObject();
 
                         while(reader.hasNext()){
-                            switch(reader.nextName()){
-                                case "uuid" :
-                                    friends.add(UUID.fromString(reader.nextString()));
-                                    break;
-                            }
+                            if (reader.nextName().equals("uuid"))
+                                friends.add(UUID.fromString(reader.nextString()));
                         }
 
                         reader.endObject();

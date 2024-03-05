@@ -18,7 +18,7 @@ import java.util.UUID;
 public class Civil {
 
     private final UUID Uuid;
-    private final float Money;
+    private float Money;
     private final List<UUID> Friends;
     private final jsonManager json = new jsonManager();
     private final File file;
@@ -41,8 +41,20 @@ public class Civil {
         return this.Money;
     }
 
+    public void setMoney(float money){
+        this.Money = money;
+    }
+
     public List<UUID> getFriends(){
         return this.Friends;
+    }
+
+    public void addFriend(UUID uuid){
+        Friends.add(uuid);
+    }
+
+    public void removeFriend(UUID uuid){
+        Friends.remove(uuid);
     }
 
     public String getCivilJson(){

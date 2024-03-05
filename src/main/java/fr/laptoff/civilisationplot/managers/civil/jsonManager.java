@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 
 public class jsonManager {
 
-    private Gson gson;
+    private final Gson gson;
 
     public jsonManager(){
         gson = new GsonBuilder()
