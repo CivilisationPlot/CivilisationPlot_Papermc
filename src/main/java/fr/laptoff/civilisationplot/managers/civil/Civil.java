@@ -1,7 +1,6 @@
 package fr.laptoff.civilisationplot.managers.civil;
 
 import fr.laptoff.civilisationplot.CivilisationPlot;
-import fr.laptoff.civilisationplot.managers.configuration.Messages;
 import fr.laptoff.civilisationplot.managers.data.Database;
 import fr.laptoff.civilisationplot.managers.data.FileManager;
 
@@ -21,7 +20,7 @@ public class Civil {
     private float Money;
     private final List<UUID> Friends;
     private UUID NationUuid;
-    private final jsonManager json = new jsonManager();
+    private final JsonManager json = new JsonManager();
     private final File file;
     private final static CivilisationPlot plugin = CivilisationPlot.getInstance();
     private final static Database database = plugin.getDatabase();
@@ -174,7 +173,7 @@ public class Civil {
         Civil civil = null;
 
         try{
-            civil = new jsonManager().deserialize(Files.readString(Path.of(new File(plugin.getDataFolder() + "/Data/Civil/" + uuid + ".json").getPath())));
+            civil = new JsonManager().deserialize(Files.readString(Path.of(new File(plugin.getDataFolder() + "/Data/Civil/" + uuid + ".json").getPath())));
         }catch(IOException e){
             e.printStackTrace();
         }
@@ -188,7 +187,7 @@ public class Civil {
         if (getJsonFromDatabase(uuid) == null)
             return null;
 
-        return new jsonManager().deserialize(getJsonFromDatabase(uuid));
+        return new JsonManager().deserialize(getJsonFromDatabase(uuid));
     }
 
     public static void syncLocalWithDatabase(UUID uuid){

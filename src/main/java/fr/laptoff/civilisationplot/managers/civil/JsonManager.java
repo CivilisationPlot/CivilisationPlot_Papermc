@@ -3,11 +3,11 @@ package fr.laptoff.civilisationplot.managers.civil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-public class jsonManager {
+public class JsonManager {
 
     private final Gson gson;
 
-    public jsonManager(){
+    public JsonManager(){
         gson = new GsonBuilder()
                 .registerTypeAdapter(Civil.class, new CivilTypeAdapter())
                 .setPrettyPrinting()

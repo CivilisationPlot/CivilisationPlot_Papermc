@@ -3,12 +3,13 @@ package fr.laptoff.civilisationplot.managers.nation.nation;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-public class jsonManager {
+public class JsonManager {
 
     private final Gson gson;
 
-    public jsonManager(){
+    public JsonManager(){
         gson = new GsonBuilder()
+                .registerTypeAdapter(Nation.class, new NationTypeAdapter())
                 .disableHtmlEscaping()
                 .serializeNulls()
                 .setPrettyPrinting()

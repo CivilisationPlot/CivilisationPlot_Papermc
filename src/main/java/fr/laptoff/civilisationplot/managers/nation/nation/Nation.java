@@ -22,7 +22,7 @@ public class Nation {
     private final List<UUID> MembersList;
     private UUID Capital;
     private final List<UUID> CitiesList;
-    private final jsonManager json = new jsonManager();
+    private final JsonManager json = new JsonManager();
     private static final CivilisationPlot plugin = CivilisationPlot.getInstance();
     private static final Database database = plugin.getDatabase();
     private final File file;
@@ -196,7 +196,7 @@ public class Nation {
 
         Nation nation = null;
         try {
-            nation = new jsonManager().deserialize(Files.readString(Path.of(new File(plugin.getDataFolder() + "/Data/Nation/" + uuid + ".json").getPath())));
+            nation = new JsonManager().deserialize(Files.readString(Path.of(new File(plugin.getDataFolder() + "/Data/Nation/" + uuid + ".json").getPath())));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -208,7 +208,7 @@ public class Nation {
         if (!database.isConnected())
             return null;
 
-        return new jsonManager().deserialize(getJsonFromDatabase(uuid));
+        return new JsonManager().deserialize(getJsonFromDatabase(uuid));
     }
 
     public static void syncLocalWithDatabase(UUID uuid){

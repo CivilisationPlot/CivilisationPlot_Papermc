@@ -9,29 +9,25 @@ import java.util.UUID;
 public class Plot {
 
     private Chunk chunk;
-    private UUID Uuid;
     private UUID NationUuid;
     private UUID CityUuid;
     private UUID ProprietaryUuid;
     File file;
     public static final CivilisationPlot plugin = CivilisationPlot.getInstance();
 
-    public Plot(Chunk chunk, UUID uuid, UUID nationUuid, UUID cityUuid, UUID proprietaryUuid){
+    public Plot(Chunk chunk, UUID nationUuid, UUID cityUuid, UUID proprietaryUuid){
         this.chunk = chunk;
-        this.Uuid = uuid;
         this.NationUuid = nationUuid;
         this.CityUuid = cityUuid;
         this.ProprietaryUuid = proprietaryUuid;
 
-        file = new File(plugin.getDataFolder() + "/Data/Plot/" + this.Uuid + ".json");
+        String chunkId = this.chunk.getX() + "-" + this.chunk.getZ();
+
+        file = new File(plugin.getDataFolder() + "/Data/Plot/" + chunkId + ".json");
     }
 
     public Chunk getChunk(){
         return this.chunk;
-    }
-
-    public UUID getUuid(){
-        return this.Uuid;
     }
 
     public UUID getNation(){
