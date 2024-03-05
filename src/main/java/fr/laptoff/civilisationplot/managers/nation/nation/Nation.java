@@ -188,6 +188,22 @@ public class Nation {
         return null;
     }
 
+    public static Nation getNationFromLocal(UUID uuid){
+        syncLocalWithDatabase(uuid);
+
+        if (!isLocalExist(uuid))
+            return null;
+
+        Nation nation = null;
+        try {
+            nation = new jsonManager().deserialize(Files.readString(Path.of(new File(plugin.getDataFolder() + "/Data/Nation/" + uuid + ".json").getPath())));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return nation;
+    }
+
     public static Nation getNationFromDatabase(UUID uuid){
         if (!database.isConnected())
             return null;

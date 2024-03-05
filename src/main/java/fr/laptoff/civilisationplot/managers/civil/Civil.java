@@ -165,6 +165,22 @@ public class Civil {
         return null;
     }
 
+    public static Civil getCivilFromLocal(UUID uuid){
+        syncLocalWithDatabase(uuid);
+
+        if (!isLocalExist(uuid))
+            return null;
+
+        Civil civil = null;
+
+        try{
+            civil = new jsonManager().deserialize(Files.readString(Path.of(new File(plugin.getDataFolder() + "/Data/Civil/" + uuid + ".json").getPath())));
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+        return civil;
+    }
+
     public static Civil getCivilFromDatabase(UUID uuid){
         if (!database.isConnected())
             return null;
