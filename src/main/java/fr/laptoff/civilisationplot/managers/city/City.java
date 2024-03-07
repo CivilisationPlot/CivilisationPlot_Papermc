@@ -9,8 +9,8 @@ import java.util.UUID;
 public class City {
 
     private final UUID Uuid;
-    private final String Name;
-    private final UUID Mayor;
+    private String Name;
+    private UUID Mayor;
     private final File file;
     private static final CivilisationPlot plugin = CivilisationPlot.getInstance();
     private static final Database database = plugin.getDatabase();
@@ -23,6 +23,26 @@ public class City {
 
         file = new File(plugin.getDataFolder() + "/Data/City/" + this.Uuid + ".json");
 
+    }
+
+    public UUID getUuid(){
+        return this.Uuid;
+    }
+
+    public String getName(){
+        return this.Name;
+    }
+
+    public UUID getMayor(){
+        return this.Mayor;
+    }
+
+    public void setName(String s){
+        this.Name = s;
+    }
+
+    public void setMayor(UUID m){
+        this.Mayor = m;
     }
 
 }
