@@ -11,15 +11,17 @@ public class City {
     private final UUID Uuid;
     private String Name;
     private UUID Mayor;
+    private UUID Nation;
     private final File file;
     private static final CivilisationPlot plugin = CivilisationPlot.getInstance();
     private static final Database database = plugin.getDatabase();
 
-    public City(UUID uuid, String name, UUID mayor){
+    public City(UUID uuid, String name, UUID mayor, UUID nation){
 
         this.Uuid = uuid;
         this.Name = name;
         this.Mayor = mayor;
+        this.Nation = nation;
 
         file = new File(plugin.getDataFolder() + "/Data/City/" + this.Uuid + ".json");
 
@@ -37,6 +39,10 @@ public class City {
         return this.Mayor;
     }
 
+    public UUID getNation(){
+        return this.Nation;
+    }
+
     public void setName(String s){
         this.Name = s;
     }
@@ -45,6 +51,8 @@ public class City {
         this.Mayor = m;
     }
 
-
+    public void setNation(UUID n){
+        this.Nation = n;
+    }
 
 }

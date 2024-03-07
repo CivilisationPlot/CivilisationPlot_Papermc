@@ -15,6 +15,7 @@ public class CityTypeAdapter extends TypeAdapter<City> {
         writer.name("uuid").value(city.getUuid().toString());
         writer.name("name").value(city.getName());
         writer.name("mayor").value(city.getMayor().toString());
+        writer.name("nation").value(city.getNation().toString());
         writer.endObject();
 
     }
@@ -25,6 +26,7 @@ public class CityTypeAdapter extends TypeAdapter<City> {
         UUID uuid = null;
         String name = null;
         UUID mayor = null;
+        UUID nation = null;
 
         reader.beginObject();
         while(reader.hasNext()){
@@ -38,10 +40,13 @@ public class CityTypeAdapter extends TypeAdapter<City> {
                 case "mayor" :
                     mayor = UUID.fromString(reader.nextString());
                     break;
+                case "nation" :
+                    nation = UUID.fromString(reader.nextString());
+                    break;
             }
         }
         reader.endObject();
 
-        return new City(uuid, name, mayor);
+        return new City(uuid, name, mayor, nation);
     }
 }
